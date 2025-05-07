@@ -1,6 +1,7 @@
 package com.t1fsd.trab1fds;
 
 public class Barca {
+    
     private Relogio relogio;
     private double precoBase;
 
