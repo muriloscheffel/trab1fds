@@ -16,18 +16,14 @@ public class Barca {
     public double defineAssento(String assentoInformado) {
         int fileira = Integer.parseInt(assentoInformado.substring(1, 3)) - 1;
         int assento = Integer.parseInt(assentoInformado.substring(4, 6)) - 1;
+        int hora = relogio.getHora();
+        int minuto = relogio.getMinuto();
 
         if (fileira < 0 || fileira >= 60 || assento < 0 || assento >= 20)
             return -1;
 
         if (ocupados[fileira][assento])
             return -2;
-
-        if (relogio.getHora() >= 8 && relogio.getHora() <= 12)
-            return precoBase;
-
-        if (relogio.getHora() > 12 && relogio.getHora() < 14)
-            return precoBase * 0.8;
 
         if (passageiros >= 0 && passageiros < 100 && fileira >= 20)
             return -3;
@@ -37,8 +33,27 @@ public class Barca {
 
         ocupados[fileira][assento] = true;
         passageiros++;
-        return precoBase * 1.2;
 
+        if ((hora == 12 && minuto > 0) || hora == 13)
+            return precoBase * 1.1;
+
+        if ((hora == 18 && minuto > 0) || hora == 19)
+            return precoBase * 1.1;
+
+        if ((hora >= 8 && hora <= 12) || (hora >= 14 && hora <= 18))
+            return precoBase;
+
+        if (hora >= 18 && hora < 20)
+            return precoBase * 1.1;
+
+        if (hora >= 20 && hora <= 23)
+            return precoBase * 1.2;
+
+        if (hora >= 0 && hora <= 7) {
+            return precoBase * 1.5;
+        }
+
+        return 0;
     }
 
     public void ocupacaoArbitraria(String assentoInformado) {
