@@ -42,6 +42,11 @@ public class Barca {
     }
 
     public void ocupacaoArbitraria(String assentoInformado) {
+        int fileira = Integer.parseInt(assentoInformado.substring(1, 3)) - 1;
+        int assento = Integer.parseInt(assentoInformado.substring(4, 6)) - 1;
+
+        ocupados[fileira][assento] = true;
+        passageiros++;
     }
 
     public void printBarca() {
