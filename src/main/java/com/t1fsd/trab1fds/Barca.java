@@ -25,11 +25,16 @@ public class Barca {
         if (ocupados[fileira][assento])
             return -2;
 
-        if (passageiros >= 0 && passageiros < 100 && fileira >= 20)
+        if (passageiros >= 0 && passageiros <= 100 && fileira >= 20) {
             return -3;
-
-        if (passageiros >= 100 && passageiros < 200 && (fileira < 40 || fileira >= 60))
+        }
+        else if (passageiros > 100 && passageiros <= 200 && (fileira < 40 || fileira > 60)) {
             return -3;
+        }
+        else if(passageiros > 200) {
+            // sem condições
+        }
+            
 
         ocupados[fileira][assento] = true;
         passageiros++;
