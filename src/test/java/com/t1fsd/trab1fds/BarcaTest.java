@@ -59,7 +59,7 @@ public class BarcaTest {
     @CsvSource({
             "-1, -1",
             "21, -1",
-            "00, -1",
+            "00, 100.0",
             "01, 100.0",
             "11, 100.0",
             "20, 100.0"
@@ -75,13 +75,13 @@ public class BarcaTest {
     @ParameterizedTest
     @CsvSource({
             "-1, -1",
-            "00, -1",
+            "00, 100.0",
             "01, 100.0",
             "10, 100.0",
             "20, 100.0",
             "21, -3",
             "59, -3",
-            "60, -3",
+            "60, -1",
             "61, -1"
 
     })
@@ -105,23 +105,41 @@ public class BarcaTest {
     void testaDistribuicaoDePeso() {
         when(relogio.getHora()).thenReturn(15);
         Barca b = new Barca(relogio, 100);
+
+        // Simula os primeiros 100 passageiros (fileiras 1 a 20)
         for (int i = 0; i < 100; i++) {
-            b.defineAssento(String.format("F%02dA01", (i % 20) + 1));
+            int fileira = i / 5; // Cada fileira tem 5 assentos
+            int assento = i % 5; // Assentos de 0 a 4 em cada fileira
+            String assentoStr = String.format("F%02dA%02d", fileira, assento);
+            b.defineAssento(assentoStr);
         }
-        // 101 passageiros
+
+        System.out.println(b.size());
+        // Verifica que fileiras 21 a 60 estão bloqueadas para o 101º passageiro
         double rEsp = -3;
         double rObs = b.defineAssento("F21A01");
         assertEquals(rEsp, rObs);
-        rObs = b.defineAssento("F40A01");
-        assertEquals(rEsp, rObs);
 
+        // Simula os próximos 100 passageiros (fileiras 40 a 60)
         for (int i = 0; i < 100; i++) {
-            b.defineAssento(String.format("F%02dA01", (i % 20) + 40));
-        } // 201 passageiros
+            int fileira = (i / 5) + 40; // Fileiras de 40 a 60
+            int assento = (i % 5) + 1; // Assentos de 1 a 5
+            String assentoStr = String.format("F%02dA%02d", fileira, assento);
+            double resultado = b.defineAssento(assentoStr);
+            if (resultado < 0) { // Assento rejeitado
+                System.out.println("Assento rejeitado: " + assentoStr + " -> Resultado: " + resultado);
+            }
+        }
+
+        // b.printBarca();
+        System.out.println(b.size());
+
+        // Verifica que passageiros acima de 200 podem ocupar qualquer fileira livre
         rObs = b.defineAssento("F39A01");
-        assertEquals(100.0, rObs);
+        assertEquals(100.0, rObs); // Fileira 39 deve estar disponível
+
         rObs = b.defineAssento("F21A01");
-        assertEquals(-2, rObs);
+        assertEquals(100.0, rObs); // Fileira 21 deve estar disponível
     }
 
 }

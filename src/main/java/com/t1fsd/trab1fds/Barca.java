@@ -13,29 +13,38 @@ public class Barca {
         passageiros = 0;
     }
 
+    public int size() {
+        return passageiros;
+    }
+
     public double defineAssento(String assentoInformado) {
-        int fileira = Integer.parseInt(assentoInformado.substring(1, 3)) - 1;
-        int assento = Integer.parseInt(assentoInformado.substring(4, 6)) - 1;
+        int fileira = Integer.parseInt(assentoInformado.substring(1, 3));
+        int assento = Integer.parseInt(assentoInformado.substring(4, 6));
         int hora = relogio.getHora();
         int minuto = relogio.getMinuto();
 
-        if (fileira < 0 || fileira >= 60 || assento < 0 || assento >= 20)
-            return -1;
+        // 100 primeiros - 1 - 20
+        // 101 a 200 - 40 - 60
+        // 200 ou mais podem sentar em qualquer lugar livre
 
-        if (ocupados[fileira][assento])
-            return -2;
+        if (fileira < 0 || fileira >= 60 || assento < 0 || assento >= 20) {
+            return -1; // Assento inválido
+        }
 
-        if (passageiros >= 0 && passageiros <= 100 && fileira >= 20) {
-            return -3;
+        if (ocupados[fileira][assento]) {
+            return -2; // Assento já ocupado
         }
-        else if (passageiros > 100 && passageiros <= 200 && (fileira < 40 || fileira > 60)) {
-            return -3;
-        }
-        else if(passageiros > 200) {
-            // sem condições
-        }
-            
 
+        // Verifica regras de distribuição de peso
+        if (passageiros < 100 && fileira >= 20) {
+            return -3; // Bloqueado para os primeiros 100 passageiros
+        }
+
+        if (passageiros >= 100 && passageiros < 200 && (fileira < 40 || fileira >= 60)) {
+            return -3; // Bloqueado para os passageiros 101 a 200
+        }
+
+        // Marca o assento como ocupado
         ocupados[fileira][assento] = true;
         passageiros++;
 
@@ -58,7 +67,7 @@ public class Barca {
             return precoBase * 1.5;
         }
 
-        return 0;
+        return precoBase;
     }
 
     public void ocupacaoArbitraria(String assentoInformado) {
@@ -74,7 +83,7 @@ public class Barca {
             for (int j = 0; j < ocupados[1].length; j++) {
                 System.out.print(ocupados[i][j] + " ");
             }
-            System.out.println();
+            System.out.println("Fileira" + i);
         }
     }
 }
