@@ -99,8 +99,9 @@ public class BarcaTest {
     void testaAssentoOcupado() {
         Barca b = new Barca(relogio, 100.0);
         b.defineAssento("F02A01");
+        double rEsp = -2;
         double rObs = b.defineAssento("F02A01");
-        assertEquals(-2, rObs, 0.0001);
+        assertEquals(rEsp, rObs, 0.0001);
     }
 
     @Test
@@ -108,40 +109,39 @@ public class BarcaTest {
         when(relogio.getHora()).thenReturn(15);
         Barca b = new Barca(relogio, 100);
 
-        // Simula os primeiros 100 passageiros (fileiras 1 a 20)
         for (int i = 0; i < 100; i++) {
-            int fileira = i / 5; // Cada fileira tem 5 assentos
-            int assento = i % 5; // Assentos de 0 a 4 em cada fileira
+            int fileira = i / 5;
+            int assento = i % 5;
             String assentoStr = String.format("F%02dA%02d", fileira, assento);
             b.defineAssento(assentoStr);
         }
 
         System.out.println(b.size());
-        // Verifica que fileiras 21 a 60 estão bloqueadas para o 101º passageiro
+
         double rEsp = -3;
         double rObs = b.defineAssento("F21A01");
         assertEquals(rEsp, rObs);
 
-        // Simula os próximos 100 passageiros (fileiras 40 a 60)
         for (int i = 0; i < 100; i++) {
-            int fileira = (i / 5) + 40; // Fileiras de 40 a 60
-            int assento = (i % 5) + 1; // Assentos de 1 a 5
+            int fileira = (i / 5) + 40;
+            int assento = (i % 5) + 1;
             String assentoStr = String.format("F%02dA%02d", fileira, assento);
             double resultado = b.defineAssento(assentoStr);
-            if (resultado < 0) { // Assento rejeitado
+            if (resultado < 0) {
                 System.out.println("Assento rejeitado: " + assentoStr + " -> Resultado: " + resultado);
             }
         }
 
-        // b.printBarca();
         System.out.println(b.size());
 
-        // Verifica que passageiros acima de 200 podem ocupar qualquer fileira livre
         rObs = b.defineAssento("F39A01");
-        assertEquals(100.0, rObs); // Fileira 39 deve estar disponível
+        assertEquals(100.0, rObs);
+
+        rObs = b.defineAssento("F44A11");
+        assertEquals(100.0, rObs);
 
         rObs = b.defineAssento("F21A01");
-        assertEquals(100.0, rObs); // Fileira 21 deve estar disponível
+        assertEquals(100.0, rObs);
     }
 
 }

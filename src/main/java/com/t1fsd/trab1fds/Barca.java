@@ -23,28 +23,22 @@ public class Barca {
         int hora = relogio.getHora();
         int minuto = relogio.getMinuto();
 
-        // 100 primeiros - 1 - 20
-        // 101 a 200 - 40 - 60
-        // 200 ou mais podem sentar em qualquer lugar livre
-
         if (fileira < 0 || fileira >= 60 || assento < 0 || assento >= 20) {
-            return -1; // Assento inválido
+            return -1; 
         }
 
         if (ocupados[fileira][assento]) {
-            return -2; // Assento já ocupado
+            return -2;
         }
 
-        // Verifica regras de distribuição de peso
         if (passageiros < 100 && fileira >= 20) {
-            return -3; // Bloqueado para os primeiros 100 passageiros
+            return -3;
         }
 
-        if (passageiros >= 100 && passageiros < 200 && (fileira < 40 || fileira >= 60)) {
-            return -3; // Bloqueado para os passageiros 101 a 200
-        }
-
-        // Marca o assento como ocupado
+        if (passageiros >= 100 && passageiros < 200 && (fileira < 40 || fileira >= 60)) 
+            return -3;
+        
+            
         ocupados[fileira][assento] = true;
         passageiros++;
 
