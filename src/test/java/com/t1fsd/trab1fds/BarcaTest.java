@@ -62,7 +62,8 @@ public class BarcaTest {
             "00, 100.0",
             "01, 100.0",
             "11, 100.0",
-            "20, 100.0"
+            "19, 100.0",
+            "20, -1"
     })
     void testeLimiteAssento(String assento, double resp) {
         when(relogio.getHora()).thenReturn(9);
@@ -78,7 +79,8 @@ public class BarcaTest {
             "00, 100.0",
             "01, 100.0",
             "10, 100.0",
-            "20, 100.0",
+            "19, 100.0",
+            "20, -3",
             "21, -3",
             "59, -3",
             "60, -1",
